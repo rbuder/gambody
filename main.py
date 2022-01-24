@@ -7,10 +7,7 @@ import smtplib
 from config import config
 from base64 import b64decode
 
-now = datetime.datetime.now().strftime("%d-%m-%Y-%H-%M-%S")
-logfile = f"gambody-{now}"
-
-logging.basicConfig(filename=logfile, encoding='utf-8', level=logging.DEBUG)
+logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
 def getSoup(url):
