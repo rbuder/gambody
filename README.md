@@ -16,3 +16,5 @@ export GMAIL_PASSWORD=$(echo 'P@$$W0rd'|base64)
 export GMAIL_SENDER="jane.doe@gmail.com"
 export GMAIL_RECIPIENTS="jane.doe@gmail.com,john.doe@gmail.com"
 ```
+
+docker-compose up 
