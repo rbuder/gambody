@@ -15,9 +15,6 @@ def getSoup(url):
     soup = BeautifulSoup(result.text, 'html.parser')
     return soup
 
-def divs(soup, className):
-    return soup.body.find_all('div', class_=className)
-
 def getObjectLinks(soup):
     return [link['href'] for link in soup.find_all('a', class_='txt to-details')]
 
