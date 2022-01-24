@@ -1,6 +1,7 @@
+import os
 config = {
-    "username": "john.doe@gmail.com",
-    "password": "xxxxxxxx",
-    "sender": "john.doe@gmail.com",
-    "receivers": ["john.doe@gmail.com", "jane.doe@gmail.com"]
+    "username": os.getenv('GMAIL_USER'),
+    "password": os.getenv('GMAIL_PASSWORD'), # base64 
+    "sender": os.getenv('GMAIL_SENDER'),
+    "receivers": os.getenv('GMAIL_RECIPIENTS').split(',')
 }
