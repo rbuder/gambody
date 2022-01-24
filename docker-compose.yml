@@ -2,7 +2,7 @@
 version: "2.1"
 services:
   gambody:
-    image: rbuder/gambody:latest
+    image: ronaldbuder/gambody:latest
     command: python main.py
     environment:
       - GMAIL_USER="jane.doe@gmail.com"
