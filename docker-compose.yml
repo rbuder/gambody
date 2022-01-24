@@ -1,0 +1,11 @@
+---
+version: "2.1"
+services:
+  gambody:
+    image: rbuder/gambody:latest
+    command: python main.py
+    environment:
+      - GMAIL_USER: "jane.doe@gmail.com"
+      - GMAIL_PASSWORD: "UEAkJFcwcmQK"
+      - GMAIL_SENDER: "jane.doe@gmail.com"
+      - GMAIL_RECIPIENTS: "jane.doe@gmail.com, john.doe@outlook.com"
