@@ -10,34 +10,40 @@ from base64 import b64decode
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
+
 def getSoup(url):
     result = get(url)
-    soup = BeautifulSoup(result.text, 'html.parser')
+    soup = BeautifulSoup(result.text, "html.parser")
     return soup
 
+
 def getObjectLinks(soup):
-    return [link['href'] for link in soup.find_all('a', class_='txt to-details')]
+    return [link["href"] for link in soup.find_all("a", class_="txt to-details")]
+
 
 def nextPage(soup):
-    link = soup.body.find_all('a', class_='active')
+    link = soup.body.find_all("a", class_="active")
     nextPage = int(link[0].text) + 1
-    return f"/page/{nextPage}/sort/default"
+    return f"page/1/sort/default?page={nextPage}"
+
 
 def resultMail(hits):
-    sender = config['sender']
-    receivers = config['receivers']
+    sender = config["sender"]
+    receivers = config["receivers"]
     subject = "Happy Monday Gambody Deals"
     body = f"""
 Happy Monday Discount Deals:
 
-https://www.gambody.com{hits[0]}
-https://www.gambody.com{hits[1]}
+{hits[0]}
+{hits[1]}
     """
     payload = f"From: {sender}\nTo: {receivers}\nSubject: {subject}\n\n{body}"
     try:
-        server_ssl = smtplib.SMTP_SSL('smtp.gmail.com', 465)
+        server_ssl = smtplib.SMTP_SSL("smtp.gmail.com", 465)
         server_ssl.ehlo()
-        server_ssl.login(config['username'], b64decode(config['password']).decode('utf-8').strip())
+        server_ssl.login(
+            config["username"], b64decode(config["password"]).decode("utf-8").strip()
+        )
         server_ssl.sendmail(sender, receivers, payload)
         server_ssl.close()
         logger.debug(f"Mail sent...")
@@ -45,25 +51,27 @@ https://www.gambody.com{hits[1]}
         logger.debug(f"Sending mail failed: {e}")
 
 
-if __name__ == '__main__':
-    url = 'https://www.gambody.com'
-    page = "/page/1/sort/default"
+if __name__ == "__main__":
+    url = "https://www.gambody.com"
+    page = "page/1/sort/default?page=1"
     links = []
     magicLink = "https://www.gambody.com/blog/happy-monday-update/"
     while True:
-        lastPage = page
         soup = getSoup(f"{url}/search/{page}")
-        links+=getObjectLinks(soup)
-        page = nextPage(soup)
-        if lastPage == page:
+        links += getObjectLinks(soup)
+        try:
+            page = nextPage(soup)
+        # Gambody's website changed slightly
+        # so let's just catch the error and use that as exit condition
+        except IndexError as e:
             break
 
     hits = []
     for link in links:
         logger.debug(link)
-        result = get(f"{url}{link}")
+        result = get(link)
         if magicLink in result.text:
-            hits+=[link]
+            hits += [link]
             logger.debug(f"Treffer: {link}")
 
     if hits:
